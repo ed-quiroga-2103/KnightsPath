@@ -4,7 +4,7 @@
 ;Funcion auxiliar que llena las columnas de la matriz
 (define (llenarLista_aux ind lim)
   (cond ((equal? ind lim) '())
-        (else (cons 0 (llenarLista_aux (+ ind 1) lim)))
+        (else (cons -1 (llenarLista_aux (+ ind 1) lim)))
         )
   )
 ;Funcion principal que llena las columnas de la matriz
@@ -95,12 +95,14 @@
         )
   )
 
+;Funcion principal para cambiar un valor dentro de una matriz
 (define (cambiarValor valor matriz fila columna)
   (cond ((or (>= fila (sizeOfMat matriz)) (>= columna (sizeOfMat matriz))) '())
         (else (cambiarValor_aux valor matriz fila columna 0 -1))
         )
   )
 
+;Funcion auxiliar para cambiar un valor dentro de una matriz
 (define (cambiarValor_aux valor matriz fila columna indF indC)
   (cond ((and (equal? fila indF) (equal? columna indC)) (cons valor (cdr matriz)))
         ((and (equal? fila indF) (equal? indC -1)) (cons (cambiarValor_aux valor (car matriz) fila columna indF (+ indC 1)) (cdr matriz)))
@@ -110,7 +112,38 @@
   )
 
 
+;Funcion auxiliar para validar una solucion
+(define (recorridoValido_aux solucion movimiento1 movimiento2)
+  (cond ((null? solucion) (esMovValido movimiento1 movimiento2))
+        (else (and (esMovValido movimiento1 movimiento2) (recorridoValido_aux (cdr solucion) movimiento2 (car solucion))))
+        )
+  )
 
+;Funcion principal para validar un recorrido y retornar una matriz con la solucion
+;HAY QUE CAMBIAR EL #t POR LA LINEA SIGUIENTE A ESTA EN LA VERSION FINAL. PARA PRUEBAS ES NECESARIO EL #t
+;(equal? (sizeOfMat solucion) (* tamano tamano))
+(define (recorridoValido tamano solucion)
+  (cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) (solAMatriz solucion (crearMatriz tamano) 0))
+        (else '())
+        )
+  )
+
+;Funcion auxiliar que transforma una solucion a una matriz con el recorrido
+(define (solAMatriz solucion matriz cont)
+  (cond ((null? solucion) matriz)
+        ((equal? -1 (getMatEle matriz (getMovFila (car solucion)) (getMovColumna (car solucion)))) (solAMatriz (cdr solucion) (cambiarValor cont matriz (getMovFila (car solucion)) (getMovColumna (car solucion))) (+ cont 1)))
+        (else '())
+        )
+  )
+
+;Funcion principal para validar un recorrido y retornar un booleano que dice si la solucion es valida
+;HAY QUE CAMBIAR EL #t POR LA LINEA SIGUIENTE A ESTA EN LA VERSION FINAL. PARA PRUEBAS ES NECESARIO EL #t
+;(equal? (sizeOfMat solucion) (* tamano tamano))
+(define (recorridoValidoSimple tamano solucion)
+  (cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) #t)
+        (else #f)
+        )
+  )
 
 
 
