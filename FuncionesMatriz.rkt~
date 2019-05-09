@@ -1,6 +1,6 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-advanced-reader.ss" "lang")((modname |Funciones Matriz|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname FuncionesMatriz) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
 ;Funcion auxiliar que llena las columnas de la matriz
 (define (llenarLista_aux ind lim)
   (cond ((equal? ind lim) '())
@@ -144,6 +144,7 @@
         (else #f)
         )
   )
+(provide (all-defined-out))
 
 
 
