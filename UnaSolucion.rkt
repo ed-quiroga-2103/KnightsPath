@@ -36,5 +36,54 @@
         )
   )
 
+(define (limite mov max)
+  (and (and (< (getMovFila mov) max) (<= 0 (getMovFila mov))) (and (< (getMovColumna mov) max) (<= 0 (getMovColumna mov))))
+  )
+
+
+(define (vacio matriz i j)
+  (and (limite (list i j) (sizeOfMat matriz)) (equal? (getMatEle matriz i j) -1))
+  )
+
+;Grado: (sizeOfMat (movsPosiblesTodos mov max))
+(define (mejorMov_aux matriz movs mejor grad max)
+  (cond ((null? movs) mejor)
+        ((and (< (grado (car movs) matriz) grad) (vacio matriz (getMovFila (car movs)) (getMovColumna (car movs)))
+              ) (mejorMov_aux matriz (cdr movs) (car movs) (grado (car movs) matriz) max))
+        (else (mejorMov_aux matriz (cdr movs) mejor grad max))
+        )
+  )
+
+(define (mejorMov actual matriz)
+  (mejorMov_aux matriz (movsPosibles actual (sizeOfMat matriz)) '() 99 (sizeOfMat matriz))
+  )
+        
+(define (solucion_aux pos matriz solucion ind)
+  (cond ((null? (mejorMov pos matriz)) (reverse solucion))
+        (else (solucion_aux (mejorMov pos matriz) (cambiarValor ind matriz (getMovFila pos) (getMovColumna pos)) (cons pos solucion)
+                            (+ ind 1)))
+        )
+  )
+
+(define (solucion pos max)
+  (solucion_aux pos (crearMatriz max) '() 1)
+  )
+
+(define (grado_aux movs matriz)
+  (cond ((null? movs) '())
+        ((equal? (getMatEle matriz (getMovFila (car movs)) (getMovColumna (car movs))) -1) (cons (car movs) (grado_aux (cdr movs) matriz)))
+        )
+  )
+
+(define (grado mov matriz)
+  (sizeOfMat (grado_aux (movsPosibles mov (sizeOfMat matriz)) matriz))
+  )
+
+
+
+
+
+
+
 
 

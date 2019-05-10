@@ -120,9 +120,11 @@
 ;HAY QUE CAMBIAR EL #t POR LA LINEA SIGUIENTE A ESTA EN LA VERSION FINAL. PARA PRUEBAS ES NECESARIO EL #t
 ;(equal? (sizeOfMat solucion) (* tamano tamano))
 (define (recorridoValido tamano solucion)
-  (cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) (solAMatriz solucion (crearMatriz tamano) 0))
+  (cond ((not (null? solucion))(cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) (solAMatriz solucion (crearMatriz tamano) 0))
         (else '())
-        )
+        ))
+        (else '())
+                  )         
   )
 
 ;Funcion auxiliar que transforma una solucion a una matriz con el recorrido
