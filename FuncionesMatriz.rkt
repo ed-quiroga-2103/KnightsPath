@@ -122,7 +122,8 @@
 ;(equal? (sizeOfMat solucion) (* tamano tamano))
 (define (PDC-Test tamano solucion)
   (cond ((equal? (* tamano tamano) (length solucion))
-  (cond ((not (null? solucion))(cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) (solAMatriz solucion (crearMatriz tamano) 0))
+  (cond ((equal? 1 tamano) '((0)))
+        ((not (null? solucion))(cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) (solAMatriz solucion (crearMatriz tamano) 0))
         (else '())
         ))
         (else '())
@@ -144,7 +145,7 @@
 ;HAY QUE CAMBIAR EL #t POR LA LINEA SIGUIENTE A ESTA EN LA VERSION FINAL. PARA PRUEBAS ES NECESARIO EL #t
 ;(equal? (sizeOfMat solucion) (* tamano tamano))
 (define (recorridoValidoSimple tamano solucion)
-  (cond ((and #t (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) #t)
+  (cond ((and (equal? (sizeOfMat solucion) (* tamano tamano)) (recorridoValido_aux (cddr solucion) (car solucion) (cadr solucion))) #t)
         (else #f)
         )
   )
@@ -213,8 +214,10 @@
         )
   )
 
-(define (PDC-Sol max pos)
-  (cond ((< max 5) '())
+(define (PDC-Sol max pos) 
+  (cond ((equal? max 1) (list pos))
+        ((< max 5) '())
+        ((or (>= (getMovFila pos) max) (>= (getMovColumna pos) max)) '())
         (else (solucion_aux pos (crearMatriz max) '() 1))
   )
   )
@@ -228,6 +231,36 @@
 
 (define (grado mov matriz)
   (sizeOfMat (grado_aux (movsPosibles mov (sizeOfMat matriz)) matriz))
+  )
+
+
+;Funcion que valida si una casilla ya fue empleada
+(define (miembro pos lista)
+  (cond ((null? lista) #f)
+        ((equal? (car lista) pos) #t)
+        (else (miembro pos (cdr lista)))
+        )
+  )
+
+
+;Funcion para eliminar
+(define (delete_last lista)
+  (aux_delete_last lista '()))
+
+;Funcion auxiliar para eliminar el ultimo elemento de una lista
+(define (aux_delete_last lista solucion)
+  (cond ((null? list) (reverse solucion))
+        ((null? (cdr lista)) (reverse solucion))
+        (else (aux_delete_last (cdr lista) (append (list(car lista)) solucion)) )
+        )
+  )
+
+;Funcion que retorna el ultimo valor de una lista
+(define (last lista)
+  (cond ((null? lista) lista)
+        ((null? (cdr lista)) (car lista))
+        (else (last (cdr lista)) )
+        )
   )
 
 (provide (all-defined-out))
